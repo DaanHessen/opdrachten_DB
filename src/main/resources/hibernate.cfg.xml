@@ -11,11 +11,11 @@
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 
         <!-- JDBC connection pool settings -->
-        <property name="hibernate.c3p0.min_size">5</property>
-        <property name="hibernate.c3p0.max_size">20</property>
-        <property name="hibernate.c3p0.timeout">300</property>
-        <property name="hibernate.c3p0.max_statements">50</property>
-        <property name="hibernate.c3p0.idle_test_period">3000</property>
+<!--        <property name="hibernate.c3p0.min_size">5</property>-->
+<!--        <property name="hibernate.c3p0.max_size">20</property>-->
+<!--        <property name="hibernate.c3p0.timeout">300</property>-->
+<!--        <property name="hibernate.c3p0.max_statements">50</property>-->
+<!--        <property name="hibernate.c3p0.idle_test_period">3000</property>-->
 
         <!-- SQL dialect -->
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -26,11 +26,14 @@
         <!-- Echo all executed SQL to stdout -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.use_sql_comments">true</property>
+        <property name="hibernate.generate_statistics">true</property>
 
         <!-- List of annotated entity classes -->
-        <mapping class="nl.hu.DP.Adres"/>
-        <mapping class="nl.hu.DP.Reiziger"/>
-        <mapping class="nl.hu.DP.OVChipkaart"/>
+        <mapping class="nl.hu.DP.domain.Adres"/>
+        <mapping class="nl.hu.DP.domain.Reiziger"/>
+        <mapping class="nl.hu.DP.domain.OVChipkaart"/>
+        <mapping class="nl.hu.DP.domain.Product"/> <!-- Added Product mapping -->
 
     </session-factory>
 </hibernate-configuration>
