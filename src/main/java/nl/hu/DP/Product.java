@@ -1,23 +1,29 @@
 package nl.hu.DP;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class Product {
+
     private Long productNummer;
     private String naam;
     private String beschrijving;
     private Long prijs;
-    private OVChipkaart ovChipkaart; // Single reference
+    private List<OVChipkaart> ovChipkaarten;
 
-    // Constructors
-    public Product() {}
+    public Product() {
+        this.ovChipkaarten = new ArrayList<>();
+    }
 
     public Product(Long productNummer, String naam, String beschrijving, Long prijs) {
         this.productNummer = productNummer;
         this.naam = naam;
         this.beschrijving = beschrijving;
         this.prijs = prijs;
+        this.ovChipkaarten = new ArrayList<>();
     }
 
-    // Getters and Setters
     public Long getProductNummer() {
         return productNummer;
     }
@@ -50,18 +56,40 @@ public class Product {
         this.prijs = prijs;
     }
 
-    public OVChipkaart getOvChipkaarts() { return ovChipkaart; }
-
-    public void setOvChipkaart(OVChipkaart ovChipkaart) {
-        this.ovChipkaart = ovChipkaart;
+    public List<OVChipkaart> getOvChipkaarten() {
+        return ovChipkaarten;
     }
 
-    public void setOvChipkaarts(OVChipkaart ovChipkaart) {
+    public void setOvChipkaarten(List<OVChipkaart> ovChipkaarten) {
+        this.ovChipkaarten = ovChipkaarten;
     }
 
-    public void addOVChipkaarts(OVChipkaart ovChipkaart) {
+    public void addOVChipkaart(OVChipkaart ovChipkaart) {
+        if (!ovChipkaarten.contains(ovChipkaart)) {
+            ovChipkaarten.add(ovChipkaart);
+            ovChipkaart.addProduct(this);
+        }
     }
 
-    public void removeOVChipkaarts(OVChipkaart ovChipkaart) {
+    public void removeOVChipkaart(OVChipkaart ovChipkaart) {
+        if (ovChipkaarten.contains(ovChipkaart)) {
+            ovChipkaarten.remove(ovChipkaart);
+            ovChipkaart.removeProduct(this);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        return Objects.equals(productNummer, product.productNummer);
+    }
+
+    @Override
+    public int hashCode() {
+        return productNummer != null ? productNummer.hashCode() : 0;
     }
 }

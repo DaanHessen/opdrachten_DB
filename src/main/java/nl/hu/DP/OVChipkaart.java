@@ -1,63 +1,71 @@
 package nl.hu.DP;
 
-import javax.persistence.*;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 public class OVChipkaart {
-    @Id
-    private Long kaart_nummer;
+    private long kaartnummer;
+    private Date geldigTot;
+    private int klasse;
+    private double saldo;
+    private long reizigerId;
+    private Reiziger reiziger; // Assuming a Reiziger class exists
+    private List<Product> producten = new ArrayList<>(); // Assuming a Product class exists
 
-    @Column(name = "geldig_tot")
-    private String geldig_tot;
+    public OVChipkaart() {}
 
-    @Column(name = "klasse")
-    private Long klasse;
-
-    @Column(name = "saldo")
-    private Long saldo;
-
-    @ManyToOne
-    @JoinColumn(name = "reiziger_id")
-    private Reiziger reiziger;
-
-    @ManyToMany(mappedBy = "ovChipkaarten")
-    private List<Product> producten;
-
-    public OVChipkaart() {
-    }
-
-    public OVChipkaart(String geldig_tot, Long klasse, Long saldo, Reiziger reiziger) {
-        this.geldig_tot = geldig_tot;
+    public OVChipkaart(long kaartnummer, Date geldigTot, int klasse, double saldo, long reizigerId) {
+        this.kaartnummer = kaartnummer;
+        this.geldigTot = geldigTot;
         this.klasse = klasse;
         this.saldo = saldo;
+        this.reizigerId = reizigerId;
+    }
+
+    public OVChipkaart(long kaartnummer, Date geldigTot, int klasse, double saldo, Reiziger reiziger) {
+        this(kaartnummer, geldigTot, klasse, saldo, reiziger.getId());
         this.reiziger = reiziger;
-        this.producten = new ArrayList<>();
     }
 
-    public Long getKaartnummer() {
-        return kaart_nummer;
+    public long getKaartnummer() {
+        return kaartnummer;
     }
 
-    public void setKaartnummer(Long kaartnummer) {
-        this.kaart_nummer = kaartnummer;
+    public void setKaartnummer(long kaartnummer) {
+        this.kaartnummer = kaartnummer;
     }
 
-    public String getGeldigTot() {
-        return geldig_tot;
+    public Date getGeldigTot() {
+        return geldigTot;
     }
 
-    public void setGeldigTot(String geldig_tot) {
-        this.geldig_tot = geldig_tot;
+    public void setGeldigTot(Date geldigTot) {
+        this.geldigTot = geldigTot;
     }
 
-    public void setKlasse(Long klasse) {
+    public int getKlasse() {
+        return klasse;
+    }
+
+    public void setKlasse(int klasse) {
         this.klasse = klasse;
     }
 
-    public void setSaldo(Long saldo) {
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
         this.saldo = saldo;
+    }
+
+    public long getReizigerId() {
+        return reizigerId;
+    }
+
+    public void setReizigerId(long reizigerId) {
+        this.reizigerId = reizigerId;
     }
 
     public Reiziger getReiziger() {
@@ -66,19 +74,39 @@ public class OVChipkaart {
 
     public void setReiziger(Reiziger reiziger) {
         this.reiziger = reiziger;
+        if (reiziger != null) {
+            this.reizigerId = reiziger.getId();
+        }
     }
 
-    public void addProduct(Product product) {
-        if (!producten.contains(product)) {
-            producten.add(product);
-            product.addOVChipkaarts(this);
-        }
+    public List<Product> getProducten() {
+        return producten;
+    }
+
+    public void setProducten(List<Product> producten) {
+        this.producten = producten;
     }
 
     public void removeProduct(Product product) {
-        if (producten.contains(product)) {
-            producten.remove(product);
-            product.removeOVChipkaarts(this);
-        }
+        this.producten.remove(product);
+    }
+
+    public void addProduct(Product product) {
+        this.producten.add(product);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OVChipkaart that = (OVChipkaart) o;
+
+        return kaartnummer == that.kaartnummer;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(kaartnummer);
     }
 }

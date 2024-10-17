@@ -2,30 +2,18 @@ package nl.hu.DP;
 
 import javax.persistence.*;
 
-@Entity
+
 public class Adres {
-    @Id
+
     private Long adres_id;
-
-    @Column(name = "postcode")
     private String postcode;
-
-    @Column(name = "huisnummer")
     private String huisnummer;
-
-    @Column(name = "straat")
     private String straat;
-
-    @Column(name = "woonplaats")
     private String woonplaats;
-
-    @OneToOne
-    @JoinColumn(name = "reiziger_id")
     private Reiziger reiziger;
 
     public Adres() {}
 
-    // Constructor
     public Adres(String postcode, String huisnummer, String straat, String woonplaats, Reiziger reiziger) {
         this.postcode = postcode;
         this.huisnummer = huisnummer;
@@ -34,9 +22,21 @@ public class Adres {
         this.reiziger = reiziger;
     }
 
-    // Getters en Setters
     public Long getId() { return adres_id; }
     public void setId(Long adres_id) { this.adres_id = adres_id; }
-    public String getPostcode() { return postcode; }
+
     public Reiziger getReiziger() { return reiziger; }
+    public void setReiziger(Reiziger reiziger) { this.reiziger = reiziger; }
+
+    public String getPostcode() { return postcode; }
+    public void setPostcode(String postcode) { this.postcode = postcode; }
+
+    public String getHuisnummer() { return huisnummer; }
+    public void setHuisnummer(String huisnummer) { this.huisnummer = huisnummer; }
+
+    public String getStraat() { return straat; }
+    public void setStraat(String straat) { this.straat = straat; }
+
+    public String getWoonplaats() { return woonplaats; }
+    public void setWoonplaats(String woonplaats) { this.woonplaats = woonplaats; }
 }
