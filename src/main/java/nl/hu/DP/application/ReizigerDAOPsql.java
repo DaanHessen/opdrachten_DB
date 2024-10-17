@@ -1,4 +1,7 @@
-package nl.hu.DP;
+package nl.hu.DP.application;
+
+import nl.hu.DP.domain.Reiziger;
+import nl.hu.DP.repository.ReizigerDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,15 +21,12 @@ public class ReizigerDAOPsql implements ReizigerDAO {
              ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) {
                 long maxId = rs.getLong("max_id");
-                if (rs.wasNull()) {
-                    return 1L;
-                } else {
-                    return maxId + 1L;
-                }
+                return (rs.wasNull()) ? 1L : maxId + 1L;
             }
         }
         return 1L;
     }
+
 
     @Override
     public boolean save(Reiziger reiziger) {

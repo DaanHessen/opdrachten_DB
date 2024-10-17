@@ -1,4 +1,6 @@
-package nl.hu.DP;
+package nl.hu.DP.repository;
+
+import nl.hu.DP.domain.Reiziger;
 
 import java.util.Date;
 import java.util.List;

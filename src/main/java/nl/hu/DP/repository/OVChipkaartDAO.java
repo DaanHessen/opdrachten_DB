@@ -1,4 +1,7 @@
-package nl.hu.DP;
+package nl.hu.DP.repository;
+
+import nl.hu.DP.domain.OVChipkaart;
+import nl.hu.DP.domain.Reiziger;
 
 import java.sql.SQLException;
 import java.util.List;

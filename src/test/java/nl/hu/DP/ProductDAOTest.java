@@ -1,5 +1,11 @@
 package nl.hu.DP;
 
+import nl.hu.DP.application.OVChipkaartDAOPsql;
+import nl.hu.DP.application.ProductDAOPsql;
+import nl.hu.DP.application.ReizigerDAOPsql;
+import nl.hu.DP.domain.OVChipkaart;
+import nl.hu.DP.domain.Product;
+import nl.hu.DP.domain.Reiziger;
 import org.junit.jupiter.api.*;
 import java.sql.Connection;
 import java.sql.DriverManager;

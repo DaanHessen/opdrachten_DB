@@ -1,7 +1,10 @@
-package nl.hu.DP;
+package nl.hu.DP.application;
+
+import nl.hu.DP.domain.Adres;
+import nl.hu.DP.domain.Reiziger;
+import nl.hu.DP.repository.AdresDAO;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,26 +19,31 @@ public class AdresDAOPsql implements AdresDAO {
     }
 
     private Long getNextAdresId() throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT MAX (adres_id) FROM adres");
+        String query = "SELECT MAX(adres_id) AS max_id FROM adres";
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet rs = statement.executeQuery()) {
             if (rs.next()) {
                 Long maxId = rs.getLong("max_id");
-                return (maxId == null) ? 1L : maxId + 1L;
+                return (rs.wasNull()) ? 1L : maxId + 1L;
             }
         }
         return 1L;
     }
 
     private Long getNextReizigerId() throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT MAX (reiziger_id) FROM reiziger");
+        String query = "SELECT MAX(reiziger_id) AS max_id FROM reiziger";
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet rs = statement.executeQuery()) {
             if (rs.next()) {
                 Long maxId = rs.getLong("max_id");
-                return (maxId == null) ? 1L : maxId + 1L;
+                return (rs.wasNull()) ? 1L : maxId + 1L;
             }
         }
         return 1L;
     }
+
+
+
 
     @Override
     public boolean save(Adres adres) {

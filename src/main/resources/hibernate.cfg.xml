@@ -28,9 +28,9 @@
         <property name="hibernate.format_sql">true</property>
 
         <!-- List of annotated entity classes -->
-        <mapping class="nl.hu.DP.Adres"/>
-        <mapping class="nl.hu.DP.Reiziger"/>
-        <mapping class="nl.hu.DP.OVChipkaart"/>
+        <mapping class="nl.hu.DP.domain.Adres"/>
+        <mapping class="nl.hu.DP.domain.Reiziger"/>
+        <mapping class="nl.hu.DP.domain.OVChipkaart"/>
 
     </session-factory>
 </hibernate-configuration>

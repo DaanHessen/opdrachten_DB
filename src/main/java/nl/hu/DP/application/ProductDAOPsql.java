@@ -1,4 +1,9 @@
-package nl.hu.DP;
+package nl.hu.DP.application;
+
+import nl.hu.DP.domain.OVChipkaart;
+import nl.hu.DP.domain.Product;
+import nl.hu.DP.repository.OVChipkaartDAO;
+import nl.hu.DP.repository.ProductDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +21,18 @@ public class ProductDAOPsql implements ProductDAO {
         this.ovChipkaartDAO = ovChipkaartDAO;
     }
 
+    public Long getNextProductNummer() throws SQLException {
+        String query = "SELECT MAX(product_nummer) AS max_id FROM product";
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+                Long maxId = rs.getLong("max_id");
+                return (rs.wasNull()) ? 1L : maxId + 1L;
+            }
+        }
+        return 1L;
+    }
+
     @Override
     public boolean save(Product product) {
         String insertProductSQL = "INSERT INTO product (product_nummer, naam, beschrijving, prijs) " +
@@ -24,8 +41,14 @@ public class ProductDAOPsql implements ProductDAO {
         String insertRelationSQL = "INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer) VALUES (?, ?) ON CONFLICT DO NOTHING";
 
         try {
+            // Assign productNummer if not set
+            if (product.getProductNummer() == null) {
+                product.setProductNummer(getNextProductNummer());
+            }
+
             connection.setAutoCommit(false);
 
+            // Insert or update the product
             try (PreparedStatement pstmtProduct = connection.prepareStatement(insertProductSQL)) {
                 pstmtProduct.setLong(1, product.getProductNummer());
                 pstmtProduct.setString(2, product.getNaam());
@@ -34,6 +57,7 @@ public class ProductDAOPsql implements ProductDAO {
                 pstmtProduct.executeUpdate();
             }
 
+            // Insert relations between Product and OVChipkaart
             try (PreparedStatement pstmtRelation = connection.prepareStatement(insertRelationSQL)) {
                 for (OVChipkaart ovChipkaart : product.getOvChipkaarten()) {
                     OVChipkaart existingCard = ovChipkaartDAO.findByKaartNummer(ovChipkaart.getKaartnummer());

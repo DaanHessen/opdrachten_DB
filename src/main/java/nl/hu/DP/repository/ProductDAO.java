@@ -1,4 +1,7 @@
-package nl.hu.DP;
+package nl.hu.DP.repository;
+
+import nl.hu.DP.domain.OVChipkaart;
+import nl.hu.DP.domain.Product;
 
 import java.util.List;
 

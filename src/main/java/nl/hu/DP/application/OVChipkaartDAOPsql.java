@@ -1,4 +1,8 @@
-package nl.hu.DP;
+package nl.hu.DP.application;
+
+import nl.hu.DP.domain.OVChipkaart;
+import nl.hu.DP.domain.Reiziger;
+import nl.hu.DP.repository.OVChipkaartDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,18 +15,41 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         this.connection = connection;
     }
 
+    public Long getNextKaartNummer() throws SQLException {
+        String query = "SELECT MAX(kaart_nummer) AS max_id FROM ov_chipkaart";
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+                Long maxId = rs.getLong("max_id");
+                return (rs.wasNull()) ? 1L : maxId + 1L;
+            }
+        }
+        return 1L;
+    }
+
     @Override
     public boolean save(OVChipkaart ovChipkaart) throws SQLException {
         String sql = "INSERT INTO ov_chipkaart (kaart_nummer, geldig_tot, klasse, saldo, reiziger_id) " +
                 "VALUES (?, ?, ?, ?, ?) " +
                 "ON CONFLICT (kaart_nummer) DO NOTHING";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setLong(1, ovChipkaart.getKaartnummer());
-            pstmt.setDate(2, ovChipkaart.getGeldigTot());
-            pstmt.setInt(3, ovChipkaart.getKlasse());
-            pstmt.setDouble(4, ovChipkaart.getSaldo());
-            pstmt.setLong(5, ovChipkaart.getReizigerId());
-            return pstmt.executeUpdate() > 0;
+
+        try {
+            // Assign kaartnummer if not set or invalid
+            if (ovChipkaart.getKaartnummer() == 0) { // Assuming 0 is invalid
+                ovChipkaart.setKaartnummer(getNextKaartNummer());
+            }
+
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setLong(1, ovChipkaart.getKaartnummer());
+                pstmt.setDate(2, ovChipkaart.getGeldigTot());
+                pstmt.setInt(3, ovChipkaart.getKlasse());
+                pstmt.setDouble(4, ovChipkaart.getSaldo());
+                pstmt.setLong(5, ovChipkaart.getReizigerId());
+                return pstmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
