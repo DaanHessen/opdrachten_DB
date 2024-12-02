@@ -41,14 +41,12 @@ public class ProductDAOPsql implements ProductDAO {
         String insertRelationSQL = "INSERT INTO ov_chipkaart_product (kaart_nummer, product_nummer) VALUES (?, ?) ON CONFLICT DO NOTHING";
 
         try {
-            // Assign productNummer if not set
             if (product.getProductNummer() == null) {
                 product.setProductNummer(getNextProductNummer());
             }
 
             connection.setAutoCommit(false);
 
-            // Insert or update the product
             try (PreparedStatement pstmtProduct = connection.prepareStatement(insertProductSQL)) {
                 pstmtProduct.setLong(1, product.getProductNummer());
                 pstmtProduct.setString(2, product.getNaam());
@@ -57,7 +55,6 @@ public class ProductDAOPsql implements ProductDAO {
                 pstmtProduct.executeUpdate();
             }
 
-            // Insert relations between Product and OVChipkaart
             try (PreparedStatement pstmtRelation = connection.prepareStatement(insertRelationSQL)) {
                 for (OVChipkaart ovChipkaart : product.getOvChipkaarten()) {
                     OVChipkaart existingCard = ovChipkaartDAO.findByKaartNummer(ovChipkaart.getKaartnummer());
