@@ -34,8 +34,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
                 "ON CONFLICT (kaart_nummer) DO NOTHING";
 
         try {
-            // Assign kaartnummer if not set or invalid
-            if (ovChipkaart.getKaartnummer() == 0) { // Assuming 0 is invalid
+            if (ovChipkaart.getKaartnummer() == 0) { 
                 ovChipkaart.setKaartnummer(getNextKaartNummer());
             }
 
